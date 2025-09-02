@@ -1,8 +1,10 @@
 import jwt from "jsonwebtoken";
 import { UserModel } from "../models/user.model.js";
 import { ProfileModel } from "../models/profile.model.js";
+import { generateToken } from "../helpers/jwt.helpers.js";
 
 export const register = async (req, res) => {
+  //TOMO TODOS LOS DATOS NECESARIOS REGISTRAR UN USUARIO (DEL USUARIO COMO DEL PERFIL)
   try {
     const {
       username,
@@ -44,19 +46,36 @@ export const register = async (req, res) => {
 export const login = async (req, res) => {
   const { username, password } = req.body;
   try {
+    //PARA LOGEAR, BUSCO UN USUARIO EXISTENTE QUE TENGA LOS DATOS ENVIADOS
     const user = await UserModel.findOne({
       where: {
         username: username,
         password: password,
       },
+      include: {
+        model: ProfileModel,
+        attributes: ["first_name", "last_name"],
+        as: "profile",
+      },
     });
 
+    //SI NO EXISTE, ARROJO UN ERROR
     if (!user) {
       return res.status(404).json({
         message: "Wrong credentials",
       });
     }
 
+    //CREO UN TOKEN
+    const token = generateToken(user);
+
+    //ENVÍO EL JWT COMO COOKIE
+    res.cookie("token", token, {
+      httpOnly: true, // No accesible desde JavaScript
+      maxAge: 1000 * 60 * 60, // 1 hora
+    });
+
+    //MENSAJE DE QUE EL USUARIO SE LOGEÓ CORRECTAMENTE
     return res.status(200).json({
       message: "Logged correctly",
     });
