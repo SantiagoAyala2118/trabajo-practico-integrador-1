@@ -1,14 +1,9 @@
 import { body } from "express-validator";
 import { UserModel } from "../models/user.model.js";
 
-// User/Auth:
-// ● username: 3-20 caracteres, alfanumérico, único.
-// ● email: formato válido, único.
-// ● password: mínimo 8 caracteres, al menos una mayúscula, minúscula y número.
-// ● role: solo valores permitidos ('user', 'admin').
-
-//VALIDACIONES PARA CREAR UN USUARIO
+//VALIDACIONES PARA CREAR UN USUARIO Y PERFIL
 export const createUserValidations = [
+  //VALIDACIONES PARA LOS CAMPOS DEL USUARIO
   body("username")
     .trim()
     .notEmpty()
@@ -75,4 +70,48 @@ export const createUserValidations = [
     .withMessage("Role cannot be empty")
     .isIn(["user", "admin"])
     .withMessage("Role must be either 'user' or 'admin'"),
+  //VALIDACIONES PARA LOS CAMPOS DEL PERFIL
+  body("first_name")
+    .trim()
+    .notEmpty()
+    .withMessage("First_name cannot be empty")
+    .isString()
+    .withMessage("First_name must be a string")
+    .isLength({ min: 2, max: 50 })
+    .withMessage(
+      "First_name must contain at least 5 characters and a maximum of 50"
+    )
+    .matches(/^[A-Za-z]+$/)
+    .withMessage("First_name must contain only letters, not numbers or signs"),
+  body("lastname")
+    .trim()
+    .notEmpty()
+    .withMessage("Lastname cannot be empty")
+    .isString()
+    .withMessage("Lastname must be a string")
+    .isLength({ min: 2, max: 50 })
+    .withMessage(
+      "Lastname must contain at least 5 characters and a maximum of 50"
+    )
+    .matches(/^[A-Za-z]+$/)
+    .withMessage("Lastname must contain only letters, not numbers or signs"),
+  body("biography")
+    .trim()
+    .notEmpty()
+    .withMessage("Biography cannot be empty")
+    .isString()
+    .withMessage("Biography must be a string")
+    .isLength({ max: 500 })
+    .withMessage("Biography cannot exceed 500 characters"),
+  body("avatar_url")
+    .optional()
+    .trim()
+    .notEmpty()
+    .withMessage("The avatar_url cannot be empty")
+    .isURL()
+    .withMessage("The avatar_url format is invalid"),
 ];
+// Profile:
+// ● first_name y last_name: 2-50 caracteres, solo letras.
+// ● biography: máximo 500 caracteres.
+// ● avatar_url: formato URL válido (opcional).
