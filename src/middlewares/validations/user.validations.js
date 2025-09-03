@@ -1,5 +1,5 @@
 import { body } from "express-validator";
-import { UserModel } from "../models/user.model.js";
+import { UserModel } from "../../models/user.model.js";
 
 //VALIDACIONES PARA CREAR UN USUARIO Y PERFIL
 export const createUserValidations = [

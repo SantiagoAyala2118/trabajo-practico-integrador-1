@@ -1,5 +1,5 @@
 import { body } from "express-validator";
-import { TagModel } from "../models/tag.model.js";
+import { TagModel } from "../../models/tag.model.js";
 
 export const createTagValidations = [
   body("name")
