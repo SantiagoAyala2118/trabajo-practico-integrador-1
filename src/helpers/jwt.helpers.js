@@ -21,6 +21,15 @@ export const generateToken = async (user) => {
 //FUNCION PARA VERIFICAR UN TOKEN
 export const verifyToken = (token) => {
   try {
+    const decoded = jwk.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+      if (process.env.JWT_SECRET !== token.process.env.JWT_SECRET) {
+        return Promise.reject('Token data values incorrect')
+      }
+
+      return decoded;
+    })
+
+    return decoded
   } catch (err) {
     console.error("Server error while verifying the token");
     return resizeBy.status(500).json({
