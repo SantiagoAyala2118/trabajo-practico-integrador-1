@@ -86,3 +86,19 @@ export const login = async (req, res) => {
     });
   }
 };
+
+
+export const logout = async (req, res) => {
+  try {
+    //PARA DESLOGEAR UN USUARIO, BORRO SU COOKIE DEL NAVEGADOR
+    res.clearCookie('token')
+    return res.status('200').json({
+      message: 'You logged out correctly, good bye'
+    })
+  } catch (err) {
+    console.error('Server error while logging out', err)
+    return res.status(500).json({
+      message: 'Server error while logging out'
+    })
+  }
+}
