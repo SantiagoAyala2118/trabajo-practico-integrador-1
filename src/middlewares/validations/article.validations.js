@@ -39,8 +39,14 @@ export const crateArticleValidations = [
     .withMessage("User_id must be a number greater than zero")
     .custom(async (user_id, { req }) => {
       try {
+        const userLogged = req.userLogged;
+
         const userExisting = await UserModel.findOne({
-          where: { id: req.body.user_id },
+          where: { id: userLogged.id && userLogged.role !== "admin" },
+          // where: {
+          //   id: userLogged.id,
+          //   role: "admin"
+          // },
         });
 
         if (!userExisting) {
