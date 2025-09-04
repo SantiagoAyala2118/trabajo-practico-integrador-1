@@ -5,7 +5,7 @@ export const authAuthorMiddleware = async (req, res, next) => {
 
   if (ArticleModel.user_id !== userLogged.id) {
     return res.status(403).json({
-      message: "Ypu cannot acceed this source",
+      message: "You cannot access this source",
     });
   }
 
