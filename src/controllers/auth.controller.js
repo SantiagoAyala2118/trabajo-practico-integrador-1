@@ -2,7 +2,10 @@ import jwt from "jsonwebtoken";
 import { UserModel } from "../models/user.model.js";
 import { ProfileModel } from "../models/profile.model.js";
 import { generateToken } from "../helpers/jwt.helpers.js";
+import { hashedPassword, comparePassword } from "../helpers/bcrypt.helper.js";
 
+
+//FUNCION PARA REGISTRAR UN USUARIO
 export const register = async (req, res) => {
   //TOMO TODOS LOS DATOS NECESARIOS REGISTRAR UN USUARIO (DEL USUARIO COMO DEL PERFIL)
   try {
@@ -18,11 +21,14 @@ export const register = async (req, res) => {
       birth_date,
     } = req.body;
 
+    //HASHEO LA CONTRASEÑA
+    const hashedPassword = hashedPassword(password);
+
     //CREO UN USUARIO
     const user = await UserModel.create({
       username: username,
       email: email,
-      password: password,
+      password: hashedPassword,
       role: role,
     });
 
@@ -47,6 +53,7 @@ export const register = async (req, res) => {
   }
 };
 
+//FUNCION PARA LOGEAR UN USUARIO
 export const login = async (req, res) => {
   const { username, password } = req.body;
   try {
@@ -54,7 +61,6 @@ export const login = async (req, res) => {
     const user = await UserModel.findOne({
       where: {
         username: username,
-        password: password,
       },
       include: {
         model: ProfileModel,
@@ -66,12 +72,27 @@ export const login = async (req, res) => {
     //SI NO EXISTE, ARROJO UN ERROR
     if (!user) {
       return res.status(404).json({
-        message: "Wrong credentials",
+        message: "Username or password incorrect",
       });
     }
 
+    //COMPARO LA CONTRASEÑA CON LA CONTRASEÑA HASHEADA
+    const validPassword = await comparePassword(password, user.password)
+
+    //SI LA CONTRASEÑA NO ES LA MISMA, TIRO UN ERROR
+    if (!validPassword) {
+      return res.status(401).json({
+        message: 'Username or password incorrect'
+      })
+    }
+
     //CREO UN TOKEN
-    const token = await generateToken(user);
+    const token = await generateToken({
+      id: user.id,
+      username: user.username,
+      password: hashedPassword,
+      role: user.role
+    });
 
     //ENVÍO EL JWT COMO COOKIE
     res.cookie("token", token, {
