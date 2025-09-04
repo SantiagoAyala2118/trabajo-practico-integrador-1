@@ -114,7 +114,7 @@ export const getArticleUser = async (req, res) => {
   }
 };
 
-//FUNCIÓN PARA TRAER LOS ARTICULOS ASOCIADOS A UN USUARIO LOGEADO (AUTENTICADO) POR SU ID
+//FUNCIÓN PARA TRAER UN ARTICULO ASOCIADO A UN USUARIO LOGEADO (AUTENTICADO) POR SU ID
 export const getArticleUserById = async (req, res) => {
   const userLogged = req.userLogged;
   try {
@@ -132,6 +132,12 @@ export const getArticleUserById = async (req, res) => {
         },
       }
     );
+
+    if (!article) {
+      return res.status(404).json({
+        message: "There is no article in the DB with that id",
+      });
+    }
 
     return res.status(200).json({
       message: "Article founded",
