@@ -1,3 +1,4 @@
+import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -21,13 +22,10 @@ export const generateToken = async (user) => {
 //FUNCION PARA VERIFICAR UN TOKEN
 export const verifyToken = (token) => {
   try {
-    const decoded = jwk.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     return decoded;
   } catch (err) {
-    console.error("Server error while verifying the token");
-    return resizeBy.status(500).json({
-      message: "Server error while verifying the token",
-    });
+    throw new Error("Error verifying the token", err);
   }
 };
