@@ -8,4 +8,6 @@ export const ownerAdminMiddleware = async (req, res, next) => {
       message: "You cannot access this resourse",
     });
   }
+
+  next();
 };
