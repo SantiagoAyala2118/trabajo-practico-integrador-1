@@ -35,6 +35,10 @@ export const register = async (req, res) => {
       birth_date: birth_date,
       user_id: user.id, //LE ASIGNO EL ID DEL USUARIO QUE SE CREÓ MÁS ARRIBA
     });
+
+    return res.status(201).json({
+      message: "User registered",
+    });
   } catch (err) {
     console.error("Server error while registering", err);
     return res.status(500).json({
@@ -54,7 +58,7 @@ export const login = async (req, res) => {
       },
       include: {
         model: ProfileModel,
-        attributes: ["first_name", "last_name"],
+        attributes: ["first_name", "lastname"],
         as: "profile",
       },
     });
@@ -67,7 +71,7 @@ export const login = async (req, res) => {
     }
 
     //CREO UN TOKEN
-    const token = generateToken(user);
+    const token = await generateToken(user);
 
     //ENVÍO EL JWT COMO COOKIE
     res.cookie("token", token, {
@@ -87,18 +91,17 @@ export const login = async (req, res) => {
   }
 };
 
-
 export const logout = async (req, res) => {
   try {
     //PARA DESLOGEAR UN USUARIO, BORRO SU COOKIE DEL NAVEGADOR
-    res.clearCookie('token')
-    return res.status('200').json({
-      message: 'You logged out correctly, good bye'
-    })
+    res.clearCookie("token");
+    return res.status(200).json({
+      message: "You logged out correctly, good bye",
+    });
   } catch (err) {
-    console.error('Server error while logging out', err)
+    console.error("Server error while logging out", err);
     return res.status(500).json({
-      message: 'Server error while logging out'
-    })
+      message: "Server error while logging out",
+    });
   }
-}
+};
