@@ -1,117 +1,189 @@
-import { ArticleModel } from '../models/article.model.js'
-import { matchedData } from 'express-validator';
-import { UserModel } from '../models/user.model.js';
+import { ArticleModel } from "../models/article.model.js";
+import { matchedData } from "express-validator";
+import { UserModel } from "../models/user.model.js";
 
 //FUNCION PARA CREAR UN ARTÍCULO
 export const createArticle = async (req, res) => {
-    try {
-        const validatedData = matchedData(req);
+  try {
+    const validatedData = matchedData(req);
 
-        const article = await ArticleModel.create(validatedData);
+    const article = await ArticleModel.create(validatedData);
 
-        return res.status(201).json({
-            message: 'Article created',
-            article: article
-        })
-    } catch (err) {
-        console.error('Server error while creating an article', err)
-        return res.status(500).json({
-            message: 'Server error while creating an article'
-        })
-    }
-}
+    return res.status(201).json({
+      message: "Article created",
+      article: article,
+    });
+  } catch (err) {
+    console.error("Server error while creating an article", err);
+    return res.status(500).json({
+      message: "Server error while creating an article",
+    });
+  }
+};
 
 //FUNCIÓN PARA LISTAR TODOS LOS ARTÍCULOS
 export const getAllArticles = async (req, res) => {
-    try {
-        const articles = await ArticleModel.findAll({
-            attributes: {
-                exclude: ['content']
-            }
-        })
+  try {
+    const articles = await ArticleModel.findAll({
+      attributes: {
+        exclude: ["content"],
+      },
+    });
 
-        if (articles.length === 0) {
-            return res.status(404).json({
-                message: 'There are no articles in the DB'
-            })
-        }
-
-        return res.status(200).json({
-            message: 'Articles founded',
-            articles: articles
-        })
-    } catch (err) {
-        console.error('Server error while getting all the articles', err)
-        return res.status(500).json({
-            message: 'Server error while getting all the articles'
-        })
+    if (articles.length === 0) {
+      return res.status(404).json({
+        message: "There are no articles in the DB",
+      });
     }
-}
+
+    return res.status(200).json({
+      message: "Articles founded",
+      articles: articles,
+    });
+  } catch (err) {
+    console.error("Server error while getting all the articles", err);
+    return res.status(500).json({
+      message: "Server error while getting all the articles",
+    });
+  }
+};
 
 //FUNCIÓN PARA LISTAR UN ARTÍCULO
 export const getArticle = async (req, res) => {
-    try {
-        const article = await ArticleModel.findOne({ where: { id: req.params.id } }, {
-            attributes: {
-                exclude: ['content']
-            }
-        })
+  try {
+    const article = await ArticleModel.findOne(
+      { where: { id: req.params.id } },
+      {
+        attributes: {
+          exclude: ["content"],
+        },
+      }
+    );
 
-        return res.status(200).json({
-            message: 'Article founded',
-            article: article
-        })
-    } catch (err) {
-        console.error('Server error while getting one article', err)
-        return res.status(500).json({
-            message: 'Server error while getting one article'
-        })
-    }
-}
+    return res.status(200).json({
+      message: "Article founded",
+      article: article,
+    });
+  } catch (err) {
+    console.error("Server error while getting one article", err);
+    return res.status(500).json({
+      message: "Server error while getting one article",
+    });
+  }
+};
 
 //FUNCIÓN PARA TRAER LOS ARTÍCULOS ASOCIADOS A UN USUARIO LOGEADO (AUTENTICADO)
 export const getArticleUser = async (req, res) => {
-    const userLogged = req.userLogged;
-    try {
-        const userArticles = await ArticleModel.findOne({ where: { user_id: userLogged.id } }, {
-            attributes: {
-                exclude: ['content']
-            },
-            include: {
-                model: UserModel,
-                as: 'user',
-                attributes: {
-                    exclude: ['password']
-                }
-            }
-        })
+  const userLogged = req.userLogged;
+  try {
+    const userArticles = await ArticleModel.findAll(
+      { where: { user_id: userLogged.id } },
+      {
+        attributes: {
+          exclude: ["content"],
+        },
+        include: {
+          model: UserModel,
+          as: "author",
+          attributes: {
+            exclude: ["password"],
+          },
+        },
+      }
+    );
 
-        if (!userArticles) {
-            return res.status(404).json({
-                message: 'There are no articles associated to that user_id'
-            })
-        }
-
-        return res.status(200).json({
-            message: 'Aticles founded',
-            articles: articles
-        })
-    } catch (err) {
-        console.error('Server error while getting the articles associated with an user', err)
-        return res.status(500).json({
-            message: 'Server error while getting the articles associated with an user'
-        })
+    if (!userArticles) {
+      return res.status(404).json({
+        message: "There are no articles associated to that user_id",
+      });
     }
-}
+
+    return res.status(200).json({
+      message: "Aticles founded",
+      articles: articles,
+    });
+  } catch (err) {
+    console.error(
+      "Server error while getting the articles associated with an user",
+      err
+    );
+    return res.status(500).json({
+      message:
+        "Server error while getting the articles associated with an user",
+    });
+  }
+};
 
 //FUNCIÓN PARA TRAER LOS ARTICULOS ASOCIADOS A UN USUARIO LOGEADO (AUTENTICADO) POR SU ID
 export const getArticleUserById = async (req, res) => {
-    try {
-        //FALTA COMPLETAR
-    } catch (err) {
-        console.error('Server error while getting the articles of the user by id', err)
-        return res.status(500).json({
-            message: 'Server error while getting the articles of the user by id'
-        })
+  const userLogged = req.userLogged;
+  try {
+    const article = await ArticleModel.findOne(
+      {
+        where: { user_id: userLogged.id },
+      },
+      {
+        include: {
+          model: UserModel,
+          as: "author",
+          attributes: {
+            exclude: ["password"],
+          },
+        },
+      }
+    );
+
+    return res.status(200).json({
+      message: "Article founded",
+      article,
+    });
+  } catch (err) {
+    console.error(
+      "Server error while getting the articles of the user by id",
+      err
+    );
+    return res.status(500).json({
+      message: "Server error while getting the articles of the user by id",
+    });
+  }
+};
+
+//FUNCIÓN PARA ACTUALIZAR UN ARTÍCULO
+export const updateArticle = async (req, res) => {
+  try {
+    const validatedData = matchedData(req, { locations: ["body"] });
+
+    if (Object.keys(validatedData) === 0) {
+      return res.status(400).json({
+        message: "You did not send anything to update",
+      });
     }
-}
+
+    await ArticleModel.update(validatedData, { where: { id: req.params.id } });
+
+    return res.status(200).json({
+      message: "Article updated",
+    });
+  } catch (err) {
+    console.error("Server error while updating article", err);
+    return res.status(500).json({
+      message: "Server error while updating article",
+    });
+  }
+};
+
+//FUNCIÓN PARA ELIMINAR UN ARTÍCULO
+export const deleteArticle = async (req, res) => {
+  try {
+    await ArticleModel.destroy({ where: { id: req.params.id } });
+
+    return res.status(410).json({
+      message: "Article deleted",
+    });
+  } catch (err) {
+    console.error("Server error while deleting article", err);
+    return res.status(500).json({
+      message: "Server error while deleting article",
+    });
+  }
+};
