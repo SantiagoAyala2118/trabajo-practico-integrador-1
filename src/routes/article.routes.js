@@ -1,14 +1,25 @@
 import { Router } from "express";
 import { authMiddleware } from "../middlewares/auth.js";
-import { createArticle, getAllArticles, getArticle, getArticleUser } from "../controllers/article.controller.js";
+import {
+  createArticle,
+  deleteArticle,
+  getAllArticles,
+  getArticle,
+  getArticleUser,
+  getArticleUserById,
+  updateArticle,
+} from "../controllers/article.controller.js";
+import { ownerAdminMiddleware } from "../middlewares/ownerAdminMiddleware.js";
 
 const articleRouter = Router();
 
-articleRouter.post('/api/articles',authMiddleware,createArticle);//FALTAN VALIDACIONES
-articleRouter.get('/api/articles',authMiddleware,getAllArticles);//FALTAN VALIDACIONES
-articleRouter.get('/api/articles/:id',authMiddleware,getArticle);//FALTAN VALIDACIONES
-articleRouter.get('/api/articles/user',authMiddleware,getArticleUser)//FALTAN VALIDACIONES
-articleRouter.get('/api/articles/user/:id',authMiddleware,)//FALTAN VALIDACIONES Y CONTROLADOR
+articleRouter.post("/api/articles", authMiddleware, createArticle); //FALTAN VALIDACIONES
+articleRouter.get("/api/articles", authMiddleware, getAllArticles); //FALTAN VALIDACIONES
+articleRouter.get("/api/articles/:id", authMiddleware, getArticle); //FALTAN VALIDACIONES
+articleRouter.get("/api/articles/user", authMiddleware, getArticleUser); //FALTAN VALIDACIONES
+articleRouter.get("/api/articles/user/:id", authMiddleware, getArticleUserById); //FALTAN VALIDACIONES
+articleRouter.put("/api/articles/:id", ownerAdminMiddleware, updateArticle);
+articleRouter.delete("/api/articles/:id", ownerAdminMiddleware, deleteArticle);
 
 export default articleRouter;
 // Articles:
