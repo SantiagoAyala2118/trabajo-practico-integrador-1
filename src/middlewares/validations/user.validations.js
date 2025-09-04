@@ -96,6 +96,7 @@ export const createUserValidations = [
     .matches(/^[A-Za-z]+$/)
     .withMessage("Lastname must contain only letters, not numbers or signs"),
   body("biography")
+    .optional()
     .trim()
     .notEmpty()
     .withMessage("Biography cannot be empty")
@@ -110,6 +111,11 @@ export const createUserValidations = [
     .withMessage("The avatar_url cannot be empty")
     .isURL()
     .withMessage("The avatar_url format is invalid"),
+  body("birth_date")
+    .optional()
+    .trim()
+    .notEmpty()
+    .withMessage("Birth_date cannot be empty"),
 ];
 // Profile:
 // ● first_name y last_name: 2-50 caracteres, solo letras.
@@ -118,20 +124,24 @@ export const createUserValidations = [
 
 //VALIDACIONES PARA TRAER UN SOLO USUARIO
 export const getUserValidations = [
-  param('id').isInt({ gt: 0 }).withMessage('The id must be a number greater than 0').custom(async (id, { req }) => {
-    try {
+  param("id")
+    .isInt({ gt: 0 })
+    .withMessage("The id must be a number greater than 0")
+    .custom(async (id, { req }) => {
+      try {
+        const userExisting = await UserModel.findOne({
+          where: { id: req.params.id },
+        });
 
-      const userExisting = await UserModel.findOne({ where: { id: req.params.id } })
-
-      if (!userExisting) {
-        return Promise.reject('There is no user in the DB with that id')
+        if (!userExisting) {
+          return Promise.reject("There is no user in the DB with that id");
+        }
+      } catch (err) {
+        console.error("Error checking the existency of the user by id", err);
+        return Promise.reject("Error checking the existency of the user by id");
       }
-    } catch (err) {
-      console.error('Error checking the existency of the user by id', err)
-      return Promise.reject('Error checking the existency of the user by id')
-    }
-  })
-]
+    }),
+];
 
 //VALIDACIONES PARA ACTUALIZAR UN USUARIO
 export const updateUerValidations = [
@@ -205,39 +215,41 @@ export const updateUerValidations = [
     .withMessage("Role cannot be empty")
     .isIn(["user", "admin"])
     .withMessage("Role must be either 'user' or 'admin'"),
-  param('id')
+  param("id")
     .isInt({ gt: 0 })
-    .withMessage('The id must be a number greater than 0')
+    .withMessage("The id must be a number greater than 0")
     .custom(async (id, { req }) => {
       try {
-
-        const userExisting = await UserModel.findOne({ where: { id: req.params.id } })
+        const userExisting = await UserModel.findOne({
+          where: { id: req.params.id },
+        });
 
         if (!userExisting) {
-          return Promise.reject('There is no user in the DB with that id')
+          return Promise.reject("There is no user in the DB with that id");
         }
       } catch (err) {
-        console.error('Error checking the existency of the user by id', err)
-        return Promise.reject('Error checking the existency of the user by id')
+        console.error("Error checking the existency of the user by id", err);
+        return Promise.reject("Error checking the existency of the user by id");
       }
-    })
-]
+    }),
+];
 
 export const deleteUserValidations = [
-  param('id')
+  param("id")
     .isInt({ gt: 0 })
-    .withMessage('The id must be a number greater than 0')
+    .withMessage("The id must be a number greater than 0")
     .custom(async (id, { req }) => {
       try {
-
-        const userExisting = await UserModel.findOne({ where: { id: req.params.id } })
+        const userExisting = await UserModel.findOne({
+          where: { id: req.params.id },
+        });
 
         if (!userExisting) {
-          return Promise.reject('There is no user in the DB with that id')
+          return Promise.reject("There is no user in the DB with that id");
         }
       } catch (err) {
-        console.error('Error checking the existency of the user by id', err)
-        return Promise.reject('Error checking the existency of the user by id')
+        console.error("Error checking the existency of the user by id", err);
+        return Promise.reject("Error checking the existency of the user by id");
       }
-    })
-]
+    }),
+];
