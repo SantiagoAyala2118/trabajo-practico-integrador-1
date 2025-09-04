@@ -14,6 +14,7 @@ authRouter.get("/api/auth/profile", authMiddleware, getProfile);
 authRouter.put("/api/auth/profile", authMiddleware, updateProfile);
 authRouter.post("/api/auth/logout", authMiddleware, logout);
 
+export default authRouter;
 // ● POST /api/auth/register: Registro de usuario con creación automática de perfil.
 // (público)
 // ● POST /api/auth/login: Login con JWT enviado como cookie segura. (público)

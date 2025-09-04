@@ -11,6 +11,7 @@ userRouter.get('/api/users/:id', authAdminMiddleware, getUserValidations, applyV
 userRouter.put('/api/users/:id', authAdminMiddleware, updateUerValidations, applyValidations, updateUser);
 userRouter.delete('/api/users/:id', authAdminMiddleware, deleteUserValidations, applyValidations, deleteUser);
 
+export default userRouter;
 
 // Users (acceso admin):
 // ● GET /api/users → Listar todos los usuarios con sus perfiles. (solo admin)
