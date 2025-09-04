@@ -6,6 +6,7 @@
 
 import { matchedData } from "express-validator";
 import { UserModel } from "../models/user.model.js";
+import { ArticleModel } from "../models/article.model.js";
 
 export const getAllUsers = async (req, res) => {
   try {
@@ -38,10 +39,14 @@ export const getUser = async (req, res) => {
         attributes: {
           exclude: ["password"],
         },
-        include: {
+        include: [{
           model: ProfileModel,
           as: "profile",
         },
+        {
+          model: ArticleModel,
+          as: 'articles'
+        }],
       }
     );
 
