@@ -33,6 +33,7 @@ ProfileModel.belongsTo(UserModel, {
 });
 
 UserModel.hasOne(ProfileModel, {
+  foreignKey: "user_id",
   sourceKey: "id",
   as: "profile",
 });
