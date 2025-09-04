@@ -5,13 +5,21 @@ import {
   updateProfile,
 } from "../controllers/profile.controller.js";
 import { authMiddleware } from "../middlewares/auth.js";
+import { updateProfileValidations } from "../middlewares/validations/profile.validations.js";
+import { applyValidations } from "../middlewares/validations/profile.validations.js";
 
 const authRouter = Router();
 
 authRouter.post("/api/auth/register", register);
 authRouter.post("/api/auth/login", login);
 authRouter.get("/api/auth/profile", authMiddleware, getProfile);
-authRouter.put("/api/auth/profile", authMiddleware, updateProfile);
+authRouter.put(
+  "/api/auth/profile",
+  authMiddleware,
+  updateProfileValidations,
+  applyValidations,
+  updateProfile
+);
 authRouter.post("/api/auth/logout", authMiddleware, logout);
 
 export default authRouter;
