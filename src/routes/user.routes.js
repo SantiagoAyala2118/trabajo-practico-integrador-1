@@ -1,15 +1,42 @@
 import { Router } from "express";
-import { authAdminMiddleware } from "../middlewares/authAdmin.js";
-import { deleteUser, getAllUsers, getUser, updateUser } from "../controllers/user.controller.js";
-import { deleteUserValidations, getUserValidations, updateUerValidations } from "../middlewares/validations/user.validations.js";
-import { applyValidations } from '../middlewares/validator.js'
+import { authAdminMiddleware } from "../middlewares/adminMiddleware.js";
+import {
+  deleteUser,
+  getAllUsers,
+  getUser,
+  updateUser,
+} from "../controllers/user.controller.js";
+import {
+  deleteUserValidations,
+  getUserValidations,
+  updateUerValidations,
+} from "../middlewares/validations/user.validations.js";
+import { applyValidations } from "../middlewares/validator.js";
 
 const userRouter = Router();
 
-userRouter.get('/api/users', authAdminMiddleware, getAllUsers);
-userRouter.get('/api/users/:id', authAdminMiddleware, getUserValidations, applyValidations, getUser);
-userRouter.put('/api/users/:id', authAdminMiddleware, updateUerValidations, applyValidations, updateUser);
-userRouter.delete('/api/users/:id', authAdminMiddleware, deleteUserValidations, applyValidations, deleteUser);
+userRouter.get("/api/users", authAdminMiddleware, getAllUsers);
+userRouter.get(
+  "/api/users/:id",
+  authAdminMiddleware,
+  getUserValidations,
+  applyValidations,
+  getUser
+);
+userRouter.put(
+  "/api/users/:id",
+  authAdminMiddleware,
+  updateUerValidations,
+  applyValidations,
+  updateUser
+);
+userRouter.delete(
+  "/api/users/:id",
+  authAdminMiddleware,
+  deleteUserValidations,
+  applyValidations,
+  deleteUser
+);
 
 export default userRouter;
 
