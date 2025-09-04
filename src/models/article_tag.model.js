@@ -16,12 +16,14 @@ ArticleModel.belongsToMany(TagModel, {
   through: ArticleTagModel,
   as: "tags",
   foreignKey: "tag_id",
+  onDelete: 'CASCADE'
 });
 
 TagModel.belongsToMany(ArticleModel, {
   through: ArticleTagModel,
   as: "articles",
   foreignKey: "article_id",
+  onDelete: 'CASCADE'
 });
 
 ArticleTagModel.belongsTo(ArticleModel, {
