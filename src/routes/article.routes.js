@@ -1,6 +1,11 @@
 import { Router } from "express";
 import { authMiddleware } from "../middlewares/auth.js";
 import {
+  createArticleValidations,
+  getArticleValidations,
+  updateArticleValidations,
+} from "../middlewares/validations/article.validations.js";
+import {
   createArticle,
   deleteArticle,
   getAllArticles,
@@ -10,16 +15,47 @@ import {
   updateArticle,
 } from "../controllers/article.controller.js";
 import { ownerAdminMiddleware } from "../middlewares/ownerAdminMiddleware.js";
+import { applyValidations } from "../middlewares/validator.js";
 
 const articleRouter = Router();
 
-articleRouter.post("/api/articles", authMiddleware, createArticle); //FALTAN VALIDACIONES
-articleRouter.get("/api/articles", authMiddleware, getAllArticles); //FALTAN VALIDACIONES
-articleRouter.get("/api/articles/:id", authMiddleware, getArticle); //FALTAN VALIDACIONES
-articleRouter.get("/api/articles/user", authMiddleware, getArticleUser); //FALTAN VALIDACIONES
-articleRouter.get("/api/articles/user/:id", authMiddleware, getArticleUserById); //FALTAN VALIDACIONES
-articleRouter.put("/api/articles/:id", ownerAdminMiddleware, updateArticle);
-articleRouter.delete("/api/articles/:id", ownerAdminMiddleware, deleteArticle);
+articleRouter.post(
+  "/api/articles",
+  authMiddleware,
+  createArticleValidations,
+  applyValidations,
+  createArticle
+);
+articleRouter.get("/api/articles", authMiddleware, getAllArticles);
+articleRouter.get(
+  "/api/articles/:id",
+  authMiddleware,
+  getArticleValidations,
+  applyValidations,
+  getArticle
+); //FALTAN VALIDACIONES
+articleRouter.get("/api/articles/user", authMiddleware, getArticleUser);
+articleRouter.get(
+  "/api/articles/user/:id",
+  authMiddleware,
+  getArticleValidations,
+  applyValidations,
+  getArticleUserById
+);
+articleRouter.put(
+  "/api/articles/:id",
+  ownerAdminMiddleware,
+  updateArticleValidations,
+  applyValidations,
+  updateArticle
+);
+articleRouter.delete(
+  "/api/articles/:id",
+  ownerAdminMiddleware,
+  getArticleValidations,
+  applyValidations,
+  deleteArticle
+);
 
 export default articleRouter;
 // Articles:
