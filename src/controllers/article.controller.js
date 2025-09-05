@@ -6,8 +6,15 @@ import { UserModel } from "../models/user.model.js";
 export const createArticle = async (req, res) => {
   try {
     const validatedData = matchedData(req);
+    const userLogged = req.userLogged;
 
-    const article = await ArticleModel.create(validatedData);
+    const article = await ArticleModel.create({
+      title: validatedData.title,
+      content: validatedData.content,
+      excerpt: validatedData.excerpt,
+      status: validatedData.status,
+      user_id: userLogged.id,
+    });
 
     return res.status(201).json({
       message: "Article created",
@@ -165,7 +172,16 @@ export const updateArticle = async (req, res) => {
       });
     }
 
-    await ArticleModel.update(validatedData, { where: { id: req.params.id } });
+    await ArticleModel.update(
+      {
+        title: validatedData.title,
+        content: validatedData.content,
+        excerpt: validatedData.excerpt,
+        status: validatedData.status,
+        user_id: ArticleModel.user_id,
+      },
+      { where: { id: req.params.id } }
+    );
 
     return res.status(200).json({
       message: "Article updated",
