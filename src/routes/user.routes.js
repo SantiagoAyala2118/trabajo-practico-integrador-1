@@ -12,10 +12,11 @@ import {
   updateUerValidations,
 } from "../middlewares/validations/user.validations.js";
 import { applyValidations } from "../middlewares/validator.js";
+import { authMiddleware } from "../middlewares/auth.js";
 
 const userRouter = Router();
 
-userRouter.get("/api/users", authAdminMiddleware, getAllUsers);
+userRouter.get("/api/users", authMiddleware, authAdminMiddleware, getAllUsers);
 userRouter.get(
   "/api/users/:id",
   authAdminMiddleware,
