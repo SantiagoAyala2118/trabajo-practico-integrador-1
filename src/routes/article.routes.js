@@ -52,6 +52,7 @@ articleRouter.put(
 );
 articleRouter.delete(
   "/api/articles/:id",
+  authMiddleware,
   ownerAdminMiddleware,
   getArticleValidations,
   applyValidations,
