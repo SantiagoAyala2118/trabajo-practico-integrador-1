@@ -7,6 +7,8 @@ dotenv.config();
 import authRouter from "./src/routes/auth.routes.js";
 import articleRouter from "./src/routes/article.routes.js";
 import userRouter from "./src/routes/user.routes.js";
+import articleTagsRouter from "./src/routes/article_tag.routes.js";
+import tagRouter from "./src/routes/tag.routes.js";
 
 import { startDB } from "./src/config/db.js";
 startDB();
@@ -24,7 +26,7 @@ app.use(
 );
 app.use(cookieParser());
 
-app.use("/", authRouter, userRouter, articleRouter);
+app.use("/", authRouter, userRouter, articleRouter, articleTagsRouter, tagRouter);
 
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en el puerto http://localhost:${PORT}`);
