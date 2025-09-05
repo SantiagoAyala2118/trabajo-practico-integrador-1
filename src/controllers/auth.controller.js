@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import { UserModel } from "../models/user.model.js";
 import { ProfileModel } from "../models/profile.model.js";
 import { generateToken } from "../helpers/jwt.helpers.js";
-import { hashedPassword, comparePassword } from "../helpers/bcrypt.helper.js";
+import { hashPassword, comparePassword } from "../helpers/bcrypt.helper.js";
 
 
 //FUNCION PARA REGISTRAR UN USUARIO
@@ -22,7 +22,7 @@ export const register = async (req, res) => {
     } = req.body;
 
     //HASHEO LA CONTRASEÑA
-    const hashedPassword = hashedPassword(password);
+    const hashedPassword = await hashPassword(password);
 
     //CREO UN USUARIO
     const user = await UserModel.create({
@@ -87,12 +87,7 @@ export const login = async (req, res) => {
     }
 
     //CREO UN TOKEN
-    const token = await generateToken({
-      id: user.id,
-      username: user.username,
-      password: hashedPassword,
-      role: user.role
-    });
+    const token = await generateToken(user);
 
     //ENVÍO EL JWT COMO COOKIE
     res.cookie("token", token, {
