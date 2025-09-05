@@ -117,10 +117,6 @@ export const createUserValidations = [
     .notEmpty()
     .withMessage("Birth_date cannot be empty"),
 ];
-// Profile:
-// ● first_name y last_name: 2-50 caracteres, solo letras.
-// ● biography: máximo 500 caracteres.
-// ● avatar_url: formato URL válido (opcional).
 
 //VALIDACIONES PARA TRAER UN SOLO USUARIO
 export const getUserValidations = [

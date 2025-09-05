@@ -16,14 +16,12 @@ ArticleModel.belongsToMany(TagModel, {
   through: ArticleTagModel,
   as: "tags",
   foreignKey: "tag_id",
-  onDelete: 'CASCADE'
 });
 
 TagModel.belongsToMany(ArticleModel, {
   through: ArticleTagModel,
   as: "articles",
   foreignKey: "article_id",
-  onDelete: 'CASCADE'
 });
 
 ArticleTagModel.belongsTo(ArticleModel, {
@@ -34,4 +32,21 @@ ArticleTagModel.belongsTo(ArticleModel, {
 ArticleTagModel.belongsTo(TagModel, {
   targetKey: "id",
   foreignKey: "tag_id",
+});
+
+ArticleModel.addHook("afterBulkDestroy", async (article) => {
+  const Article = await ArticleTagModel.findAll({
+    where: { article_id: article.id },
+  });
+  if (Article) {
+    await ArticleTagModel.destroy({ where: { id: Article.id } });
+  }
+});
+
+TagModel.addHook("afterBulkDestroy", async (tag) => {
+  const Tag = await ArticleTagModel.findAll({ where: { tag_id: tag.id } });
+
+  if (Tag) {
+    await ArticleTagModel.destroy({ where: { id: Tag.id } });
+  }
 });

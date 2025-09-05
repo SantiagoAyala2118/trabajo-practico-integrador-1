@@ -109,5 +109,3 @@ export const deleteTagValidations = [
       }
     }),
 ];
-// Tag:
-// ● name: 2-30 caracteres, único, obligatorio, sin espacios.
