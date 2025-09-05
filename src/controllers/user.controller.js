@@ -68,7 +68,7 @@ export const updateUser = async (req, res) => {
   try {
     const validatedData = matchedData(req, { locations: ["body"] });
 
-    if (Object.keys(validatedData) === 0) {
+    if (Object.keys(validatedData) == 0) {
       return res.status(400).json({
         message: "You did not send anything to update",
       });
@@ -92,6 +92,10 @@ export const updateUser = async (req, res) => {
 export const deleteUser = async (req, res) => {
   try {
     await UserModel.destroy({ where: { id: req.params.id } });
+
+    return res.status(200).json({
+      message: "User deleted correctly",
+    });
   } catch (err) {
     console.error("Server error while deleting user", err);
     return res.status(500).json({
