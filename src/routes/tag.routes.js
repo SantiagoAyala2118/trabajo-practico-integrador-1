@@ -20,6 +20,7 @@ const tagRouter = Router();
 
 tagRouter.post(
   "/api/tags",
+  authMiddleware,
   authAdminMiddleware,
   createTagValidations,
   applyValidations,
@@ -30,6 +31,7 @@ tagRouter.get("/api/tags", authMiddleware, getAllTags);
 
 tagRouter.get(
   "/api/tags/:id",
+  authMiddleware,
   authAdminMiddleware,
   getTagValidations,
   applyValidations,
@@ -38,6 +40,7 @@ tagRouter.get(
 
 tagRouter.put(
   "/api/tags/:id",
+  authMiddleware,
   authAdminMiddleware,
   updateTagValidations,
   applyValidations,
@@ -46,6 +49,7 @@ tagRouter.put(
 
 tagRouter.delete(
   "/api/tags/:id",
+  authMiddleware,
   authAdminMiddleware,
   deleteTagValidations,
   applyValidations,
