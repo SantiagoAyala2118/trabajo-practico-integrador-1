@@ -19,6 +19,7 @@ const userRouter = Router();
 userRouter.get("/api/users", authMiddleware, authAdminMiddleware, getAllUsers);
 userRouter.get(
   "/api/users/:id",
+  authMiddleware,
   authAdminMiddleware,
   getUserValidations,
   applyValidations,
@@ -26,6 +27,7 @@ userRouter.get(
 );
 userRouter.put(
   "/api/users/:id",
+  authMiddleware,
   authAdminMiddleware,
   updateUerValidations,
   applyValidations,
@@ -33,6 +35,7 @@ userRouter.put(
 );
 userRouter.delete(
   "/api/users/:id",
+  authMiddleware,
   authAdminMiddleware,
   deleteUserValidations,
   applyValidations,
