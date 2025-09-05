@@ -1,11 +1,11 @@
-import { body } from "express-validator";
+import { body,param } from "express-validator";
 import { ArticleModel } from "../../models/article.model.js";
 import { TagModel } from "../../models/tag.model.js";
 import { ArticleTagModel } from "../../models/article_tag.model.js";
 
 //VALIDACIONES PARA CREAR UN REGISTRO EN LA TABLA INTERMEDIA
 export const createArticleTagValidations = [
-  body(article_id)
+  body('article_id')
     .trim()
     .notEmpty()
     .withMessage("The article_id cannot be empty")
@@ -29,7 +29,7 @@ export const createArticleTagValidations = [
         );
       }
     }),
-  body(tag_id)
+  body('tag_id')
     .trim()
     .notEmpty()
     .withMessage("The tag_id cannot be empty")
