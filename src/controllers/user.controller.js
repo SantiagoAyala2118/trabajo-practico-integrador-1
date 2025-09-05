@@ -7,6 +7,7 @@
 import { matchedData } from "express-validator";
 import { UserModel } from "../models/user.model.js";
 import { ArticleModel } from "../models/article.model.js";
+import { ProfileModel } from "../models/profile.model.js";
 
 export const getAllUsers = async (req, res) => {
   try {
@@ -23,7 +24,7 @@ export const getAllUsers = async (req, res) => {
     return res.status(200).json({
       user: user,
     });
-  } catch (error) {
+  } catch (err) {
     console.error("Server error while getting all users", err);
     return res.status(500).json({
       message: "Server error while getting all users",
@@ -39,14 +40,16 @@ export const getUser = async (req, res) => {
         attributes: {
           exclude: ["password"],
         },
-        include: [{
-          model: ProfileModel,
-          as: "profile",
-        },
-        {
-          model: ArticleModel,
-          as: 'articles'
-        }],
+        include: [
+          {
+            model: ProfileModel,
+            as: "profile",
+          },
+          {
+            model: ArticleModel,
+            as: "articles",
+          },
+        ],
       }
     );
 
