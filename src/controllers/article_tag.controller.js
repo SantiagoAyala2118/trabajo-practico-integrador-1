@@ -8,7 +8,7 @@ export const createArticleTag = async (req, res) => {
 
     const articleTag = await ArticleTagModel.create(validatedData);
 
-    return res.status(201).jon({
+    return res.status(201).json({
       message: "Article-tag created",
       articleTag,
     });
