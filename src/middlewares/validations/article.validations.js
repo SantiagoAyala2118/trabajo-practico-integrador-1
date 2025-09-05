@@ -33,31 +33,6 @@ export const createArticleValidations = [
     .withMessage("Status cannot be empty")
     .isIn(["published", "archived"])
     .withMessage("Status must be either 'published' or 'archived0'"),
-  body("user_id")
-    .trim()
-    .notEmpty()
-    .withMessage("User_id cannot be empty")
-    .isInt({ gt: 0 })
-    .withMessage("User_id must be a number greater than zero")
-    .custom(async (user_id, { req }) => {
-      try {
-        const userExisting = await UserModel.findOne({
-          where: {
-            id: user_id,
-            role: { [Op.ne]: "admin" },
-          },
-        });
-
-        if (!userExisting) {
-          return Promise.reject(
-            "The specified user must not be an admin, or must be the author of the article"
-          );
-        }
-      } catch (err) {
-        console.error("Error checking the existency of the user by id", err);
-        return Promise.reject("Error checking the existency of the user by id");
-      }
-    }),
 ];
 
 //VALIDACIÓN PARA TRSER UN SOLO ARTÍCULO POR SU ID
@@ -159,34 +134,6 @@ export const updateArticleValidations = [
     .withMessage("Status cannot be empty")
     .isIn(["published", "archived"])
     .withMessage("Status must be either 'published' or 'archived0'"),
-  body("user_id")
-    .optional()
-    .trim()
-    .notEmpty()
-    .withMessage("User_id cannot be empty")
-    .isInt({ gt: 0 })
-    .withMessage("User_id must be a number greater than zero")
-    .custom(async (user_id, { req }) => {
-      try {
-        const userLogged = req.userLogged;
-
-        const userExisting = await UserModel.findOne({
-          where: {
-            id: userLogged.id,
-            role: { [Op.ne]: "admin" },
-          },
-        });
-
-        if (!userExisting) {
-          return Promise.reject(
-            "The specified user must not be an admin, or must be the author of the article"
-          );
-        }
-      } catch (err) {
-        console.error("Error checking the existency of the user by id", err);
-        return Promise.reject("Error checking the existency of the user by id");
-      }
-    }),
 ];
 
 // Article:
