@@ -3,7 +3,11 @@ import { ArticleModel } from "../models/article.model.js";
 export const authAuthorMiddleware = async (req, res, next) => {
   const userLogged = req.userLogged;
 
-  if (ArticleModel.user_id !== userLogged.id) {
+  const article = await ArticleModel.findOne({
+    where: { user_id: userLogged.id, id: req.body.article_id },
+  });
+
+  if (!article) {
     return res.status(403).json({
       message: "You cannot access this source",
     });
