@@ -33,7 +33,7 @@ articleRouter.get(
   getArticleValidations,
   applyValidations,
   getArticle
-); //FALTAN VALIDACIONES
+);
 articleRouter.get("/api/articles/user", authMiddleware, getArticleUser);
 articleRouter.get(
   "/api/articles/user/:id",
@@ -44,6 +44,7 @@ articleRouter.get(
 );
 articleRouter.put(
   "/api/articles/:id",
+  authMiddleware,
   ownerAdminMiddleware,
   updateArticleValidations,
   applyValidations,
