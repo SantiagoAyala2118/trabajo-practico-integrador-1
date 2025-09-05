@@ -41,11 +41,9 @@ export const createArticleValidations = [
     .withMessage("User_id must be a number greater than zero")
     .custom(async (user_id, { req }) => {
       try {
-        const userLogged = req.userLogged;
-
         const userExisting = await UserModel.findOne({
           where: {
-            id: userLogged.id,
+            id: user_id,
             role: { [Op.ne]: "admin" },
           },
         });
