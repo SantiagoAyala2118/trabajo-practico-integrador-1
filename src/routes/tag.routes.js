@@ -52,6 +52,7 @@ tagRouter.delete(
   deleteTag
 );
 
+export default tagRouter;
 // Tags:
 // ● POST /api/tags → Crear etiqueta (solo admin).
 // ● GET /api/tags → Listar todas las etiquetas. (usuario autenticado)
